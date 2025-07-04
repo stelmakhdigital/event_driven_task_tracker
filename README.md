@@ -1,4 +1,4 @@
-# event_driven_task_tracker
+# Event-driven task tracker
 Distributed Task Tracker with Event-Driven Architecture. A task management system with support for millions of operations per day.
 
 
