@@ -54,3 +54,4 @@ jobs:
           git commit -m '📊 Auto-update ADR table'
           git push
         fi
+ 
