@@ -6,8 +6,8 @@ on:
       - master
       - dev
     paths:
-      - "docs/ADRs/**/*.md" # триггер при файлов
-      - ".github/workflows/update-adr-table.yml"  # триггер при изменении самого workflow
+      - 'docs/ADRs/**/*.md' # триггер при файлов
+      - '.github/workflows/update-adr-table.yml'  # триггер при изменении самого workflow
 
 jobs:
   update-table:
@@ -21,36 +21,36 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: "3.10"
+        python-version: '3.10'
         
     - name: Detect ADR changes
       id: adr-changes
       run: |
         # проверяем изменения только в ADR-файлах
-        ADR_FILES=$(git diff --name-only HEAD^ HEAD -- "docs/ADRs/*.md")
-        if [ -n "$ADR_FILES" ]; then
-          echo "changes_detected=true" >> $GITHUB_OUTPUT
+        ADR_FILES=$(git diff --name-only HEAD^ HEAD -- 'docs/ADRs/*.md')
+        if [ -n '$ADR_FILES' ]; then
+          echo 'changes_detected=true' >> $GITHUB_OUTPUT
         else
-          echo "changes_detected=false" >> $GITHUB_OUTPUT
+          echo 'changes_detected=false' >> $GITHUB_OUTPUT
         fi
         
     - name: Update ADR table
-      if: ${{ steps.adr-changes.outputs.changes_detected == "true" }}
+      if: ${{ steps.adr-changes.outputs.changes_detected == 'true' }}
       run: |
         pip install regex
         python scripts/update_adr_table.py
         
     - name: Commit changes
-      if: ${{ steps.adr-changes.outputs.changes_detected == "true" }}
+      if: ${{ steps.adr-changes.outputs.changes_detected == 'true' }}
       run: |
-        git config user.name "github-actions"
-        git config user.email "actions@users.noreply.github.com"
+        git config user.name 'github-actions'
+        git config user.email 'actions@users.noreply.github.com'
         git add docs/readme.md
         
         # Проверяем, есть ли изменения для коммита
         if git diff-index --quiet HEAD --; then
-          echo "No changes to commit"
+          echo 'No changes to commit'
         else
-          git commit -m "📊 Auto-update ADR table"
+          git commit -m '📊 Auto-update ADR table'
           git push
         fi
