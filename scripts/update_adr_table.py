@@ -27,10 +27,9 @@ def extract_adr_data(file_path):
     return data
 
 def main():
-    # Получаем последние 6 ADR-файлов
+    # забираем указанное кол-во ADR файлов
     adr_files = sorted(glob.glob(os.path.join(ADR_DIR, "*.md")), key=os.path.getmtime, reverse=True)[:COUNTS_ADR_FOR_TABLE]
     
-    # Формируем таблицу
     table = "| Number ADR | Data | Author | Status | Description |\n"
     table += "|------------|------|--------|--------|-------------|\n"
     
@@ -38,7 +37,7 @@ def main():
         data = extract_adr_data(file)
         table += f"| {data['number']} | {data['date']} | {data['author']} | {data['status']} | {data['description']} |\n"
     
-    # Обновляем README
+    # вставляем в  README
     with open(README_PATH, 'r+') as f:
         content = f.read()
         new_content = re.sub(
