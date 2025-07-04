@@ -20,6 +20,7 @@ def extract_adr_data(file_path):
     
     data = {
         "number": adr_number,
+        "filename": filename,
         "date": "Unknown",
         "status": "Unknown",
         "author": "Unknown",
@@ -58,7 +59,8 @@ def main():
     
     for file in adr_files:
         data = extract_adr_data(file)
-        table += f"| {data['number']} | {data['date']} | {data['author']} | {data['status']} | {data['description']} |\n"
+        adr_link = f"[{data['number']}]({os.path.join('ADRs', data['filename'])})"
+        table += f"| {adr_link} | {data['date']} | {data['author']} | {data['status']} | {data['description']} |\n"
     
     # вставляем в  README
     with open(README_PATH, 'r+', encoding='utf-8') as f:
