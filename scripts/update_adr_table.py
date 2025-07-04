@@ -5,7 +5,7 @@ import re
 ADR_DIR = "docs/ADRs/"
 README_PATH = "docs/readme.md"
 MAX_DESC_LENGTH = 200
-COUNTS_ADR_FOR_TABLE = 6
+COUNTS_ADR_FOR_TABLE = 10
 
 def extract_adr_data(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
