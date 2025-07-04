@@ -26,7 +26,6 @@ volumes/
 env.txt
 *.rdb
 .env
-*cache*
 app-pgdata/
 *.mypy*/
 .mypy_cache/
