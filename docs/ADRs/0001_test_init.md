@@ -11,4 +11,4 @@
 [Details of the selected solution]
 
 ## Consequences
-[Pros, cons and possible risks]
+[Pros, cons and possible risk]
