@@ -9,6 +9,15 @@
 - Мониторинг метрик (латентность, ошибки) через Prometheus.
 - Асинхронные уведомления через WebSockets.
 
+## Преимущества проекта
+
+- горизонтальное масштабирование воркеров обработки задач (сконфигурировать кубер c масштабирование подов с привязкой к cpu и memmory) - остальная нагрузка будет автоматически балансироваться через Kafka Consumer Groups
+
+- гарантированое доставка сообщений (с конфигурацией Kafka `acks=all`)
+
+- поддержка распределенных транзакций
+
+
 
 ## Начальное описание проекта для разработки
 
@@ -152,10 +161,89 @@ Circuit Breaker:
 
 
     Реализовать в проекте:
+    - Webhook-шаблоны для популярных сервисов (Telegram, AmoCRM и тд)
     - Outbox Pattern для гарантированной доставки событий
     - Кастомный Connection Pool для работы с шардированной БД
     - Оптимизацию запросов через Materialized Views
-    - Написать тесты на проверку консистентности данных при падении Kafka.
+    - Написать тесты на проверку консистентности данных при падении Kafka
+    - Настроить дашборд Grafana (метрики: кол-во задач в час, среднее время выполнение и тд)
 
+## Предлагаемая структура проекта
+
+```txt
+task-tracker/
+├── .github/                  # GitHub Automation
+│   ├── workflows/
+│   │   ├── ci.yml            # CI: тесты + линтеры
+│   │   └── deploy.yml        # CD: деплой в k8s
+│   └── ISSUE_TEMPLATE.md     # Шаблоны багрепортов
+│
+├── src/
+│   ├── core/                 # Ядро системы
+│   │   ├── domain/           # Бизнес-логика
+│   │   │   ├── tasks.py      # Агрегаты/Сущности
+│   │   │   └── events.py     # Event-модели (Pydantic)
+│   │   │
+│   │   ├── application/      # Use Cases
+│   │   │   ├── commands/
+│   │   │   │   └── create_task.py
+│   │   │   └── queries/
+│   │   │       └── get_tasks.py
+│   │   │
+│   │   └── infrastructure/   # Адаптеры
+│   │       ├── repositories/  # Репозитории (PostgreSQL)
+│   │       ├── brokers/       # Kafka/RabbitMQ
+│   │       └── cache/         # Redis
+│   │
+│   ├── services/             # Сервисы
+│   │   ├── task_service/     # API для задач
+│   │   │   ├── api.py        # FastAPI роутеры
+│   │   │   └── schemas.py    # DTO (Pydantic)
+│   │   │
+│   │   └── notification/     # Сервис нотификаций
+│   │       ├── handlers/     # Kafka-консьюмеры
+│   │       └── templates/    # Шаблоны email/Slack
+│   │
+│   ├── monitoring/           # Observability
+│   │   ├── metrics.py        # Prometheus-метрики
+│   │   └── tracing.py        # OpenTelemetry
+│   │
+│   └── entrypoints/          # Точки входа
+│       ├── api/              # FastAPI app
+│       ├── workers/          # Kafka-воркеры
+│       └── cli.py            # CLI-утилиты
+│
+├── tests/                    # Тесты
+│   ├── unit/                 
+│   ├── integration/          # Testcontainers
+│   └── load/                 # Locust-скрипты
+│
+├── infrastructure/           # Infra as Code
+│   ├── k8s/                  # Helm-чарты
+│   ├── terraform/            # Облачные ресурсы
+│   └── docker/
+│       ├── app.dockerfile
+│       └── kafka.dockerfile
+│
+├── docs/                     # Документация
+│   ├── ARCHITECTURE.md       # Диаграммы C4/SAD
+│   ├── API.md                # Swagger-описание
+│   └── ADRs/                 # Архитектурные решения
+│       └── 01-kafka-choice.md
+│
+├── scripts/                  # Вспомогательные скрипты
+│   ├── migrate_db.py         # Alembic-миграции
+│   └── seed_data.py          # Тестовые данные
+│
+├── .env.sample               # Environment variables
+├── pyproject.toml            # Зависимости + линтеры
+└── README.md                 # Quickstart + метрики
+```
+Почему DDD как основа? - четкое разделение на домен/приложение/инфраструктуру и самое главное, что сервисы (task_service, notification) можно выносить в отдельные микросервисы.
+
+
+
+
+## Лицензия | License
 
 Этот проект лицензирован по лицензии [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
