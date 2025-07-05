@@ -3,6 +3,7 @@
 <!-- ADR_TABLE_START -->
 | Number ADR | Data | Author | Status | Description |
 |------------|------|--------|--------|-------------|
+| [0008](ADRs/0008_logs.md) | 2025-07-05 | Aleksandr Maystrishin <nuclear0077@gmail.com> | Suggested | Хранение логов проекта. |
 | [0007](ADRs/0007_deploy_in_kubernetes.md) | 2025-07-05 |  Dmitry Stelmakh <TG: @StelmakhDigital> | Suggested | Необходимость оркестрации 5+ микросервисов с возможностью быстрого горизонтального масштабирования |
 | [0006](ADRs/0006_logs_and_telemetry.md) | 2025-07-05 |  Dmitry Stelmakh <TG: @StelmakhDigital> | Suggested | Если все же инцидент достиг свое критического значения, то важно найти его эпицентр - в этом поспособствуют логи и телеметрия запроса. |
 | [0005](ADRs/0005_monitoring_and_metricks.md) | 2025-07-05 |  Dmitry Stelmakh <TG: @StelmakhDigital> | Suggested | В highload важно не допускать проблем с сервисами и разбираться с инцидентами еще до наступления критических ситуаций. Мониторинг разнообразных метрик "жизни" сервисов как раз в этом помогает. |
